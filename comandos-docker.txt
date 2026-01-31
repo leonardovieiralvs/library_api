@@ -10,3 +10,13 @@ docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com 
 ## CASO NÃO QUEIRA NETWORK, RETIRAR (--network library-network)
 
 
+
+docker ps -> visualizar quais containers estão rodando.
+docker ps -a -> visualizar quais containers estão stopados.
+
+docker stop nome_container -> parar de rodar este container.
+docker start nome_container -> rodar o container stopado.
+
+docker rm nome_container -> remover container
+
+
