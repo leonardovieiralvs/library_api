@@ -1,16 +1,12 @@
-#Criar network entre os containers
+#CRIAR NETWORK ENTRE OS CONTAINERS#
 docker network create library-network
 
-#Rodar container POSTGRES na versão 18:1
-docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library postgres:18.1
-
-#Para conectar no container
+#RODAR CONTAINER POSTGRES NA VERSÃO 18:1 JÁ COM NETWORK DOS CONTAINERS#
 docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library --network library-network postgres:18.1
 
-#Rodar PGADMIN4
-docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin dpage/pgadmin4:9.11
-
-#Para conectar no container
+#RODAR PGADMIN4 NA VERSÃO 9:11 JÁ COM NETWORK DOS CONTAINERS#
 docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin --network library-network dpage/pgadmin4:9.11
+
+## CASO NÃO QUEIRA NETWORK, RETIRAR (--network library-network)
 
 
