@@ -1,5 +1,9 @@
 #CRIAR NETWORK ENTRE OS CONTAINERS#
-docker network create library-network
+docker network create library-network -> criar network
+docker network ls -> listar todos networks abertos
+docker network rm nome_container -> deletar esse network
+docker network inspect nome_container -> visualizar quais containers estão usando o esse network
+
 
 #RODAR CONTAINER POSTGRES NA VERSÃO 18:1 JÁ COM NETWORK DOS CONTAINERS#
 docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library --network library-network postgres:18.1
@@ -18,5 +22,7 @@ docker stop nome_container -> parar de rodar este container.
 docker start nome_container -> rodar o container stopado.
 
 docker rm nome_container -> remover container
+
+docker run hello-world -> teste pra ver se o docker está rodando normalmente
 
 

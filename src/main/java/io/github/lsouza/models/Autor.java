@@ -3,15 +3,18 @@ package io.github.lsouza.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+
+@Entity
 @Getter
 @Setter
-@Entity
-@Table(name = "autor", schema = "public")
+@ToString
+@Table(name = "autor")
 public class Autor {
 
     @Id
@@ -26,9 +29,12 @@ public class Autor {
     private LocalDate dataNascimento;
 
     @Column(name = "nacionalidade", length = 50, nullable = false)
-    private String nascionalidade;
+    private String nacionalidade;
 
-    @OneToMany(mappedBy = "autor")
+
+//    @OneToMany(mappedBy = "autor")
+    @Transient
     private List<Livro> livros;
+
 
 }
