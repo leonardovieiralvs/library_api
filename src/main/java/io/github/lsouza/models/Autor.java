@@ -35,6 +35,4 @@ public class Autor {
 //    @OneToMany(mappedBy = "autor")
     @Transient
     private List<Livro> livros;
-
-
 }
