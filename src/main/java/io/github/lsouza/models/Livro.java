@@ -3,14 +3,17 @@ package io.github.lsouza.models;
 import io.github.lsouza.enumeracao.GeneroLivro;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "livros", schema = "public")
-public class Livro {
+@ToString(exclude = "autor")
+public class Livro implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -33,7 +36,7 @@ public class Livro {
     @Column(name = "preco")
     private Double preco;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_autor")
     private Autor autor;
 }

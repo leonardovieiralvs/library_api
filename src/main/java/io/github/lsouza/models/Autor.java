@@ -3,6 +3,7 @@ package io.github.lsouza.models;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -10,9 +11,9 @@ import java.util.UUID;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "livros")
 @Table(name = "autor")
-public class Autor {
+public class Autor implements Serializable {
 
     @Id
     @Column(name = "id")
@@ -28,8 +29,6 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-
-//    @OneToMany(mappedBy = "autor")
-    @Transient
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Livro> livros;
 }
