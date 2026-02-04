@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
-import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -51,7 +50,7 @@ class LivroRepositoryTest {
         livro.setDataPublicacao(LocalDate.of(1999, 1, 21));
 
         Autor autor = new Autor();
-        autor.setNome("Anne Lembek");
+        autor.setNome("Anne lembek");
         autor.setNacionalidade("Americano");
         autor.setDataNascimento(LocalDate.of(1982, 3, 23));
 
@@ -64,5 +63,15 @@ class LivroRepositoryTest {
     @Test
     void deleteAll() {
         livroRepository.deleteAll();
+    }
+
+    @Test
+    void atualizarAutorDoLivro() {
+        UUID uuid = UUID.fromString("03a43b7e-fd16-49dd-b978-82003c46e473");
+        Autor autorById = autorRepository.findById(uuid).get();
+
+        autorById.setNome("David Goggins");
+        Autor saveNovoNome = autorRepository.save(autorById);
+        System.out.println("Nome Alterado: "+saveNovoNome);
     }
 }

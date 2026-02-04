@@ -1,7 +1,6 @@
 package io.github.lsouza.repository;
 
 import io.github.lsouza.models.Autor;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,9 +19,9 @@ public class AutorRepositoryTest {
     @Test
     public void salvarTest() {
         Autor autor = new Autor();
-        autor.setNome("Reinaldo");
-        autor.setNacionalidade("Brasileiro");
-        autor.setDataNascimento(LocalDate.of(1982, 3, 23));
+                autor.setNome("Reinaldo");
+                autor.setNacionalidade("Brasileiro");
+                autor.setDataNascimento(LocalDate.of(1982, 3, 23));
 
         var autorSave = autorRepository.save(autor);
         System.out.println("Autor salvo: " + autorSave);
@@ -66,7 +65,6 @@ public class AutorRepositoryTest {
         UUID id = UUID.fromString("3e97ccdc-ca95-41ee-a751-7e99cb164cf5");
 
         var autor = autorRepository.findById(id).get();
-        var byId = autorRepository.findById(id).orElseThrow(() -> new RuntimeException("o"));
         autorRepository.delete(autor);
     }
 }
