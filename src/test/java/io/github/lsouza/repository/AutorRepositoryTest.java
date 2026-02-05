@@ -74,23 +74,23 @@ public class AutorRepositoryTest {
     @Test
     void salvarAutorComLivros() {
         Autor autor = new Autor();
-        autor.setNome("Thomas Anderssen");
-        autor.setNacionalidade("Italiano");
-        autor.setDataNascimento(LocalDate.of(1977, 1, 20));
+        autor.setNome("AGENTE SMITH");
+        autor.setNacionalidade("Americano");
+        autor.setDataNascimento(LocalDate.of(1970, 3, 2));
 
         Livro livro = new Livro();
-        livro.setIsbn("321221-890123");
-        livro.setPreco(50.0);
-        livro.setGenero(GeneroLivro.FICCAO);
-        livro.setTitulo("MATRIX");
+        livro.setIsbn("124434-144553");
+        livro.setPreco(70.0);
+        livro.setGenero(GeneroLivro.MISTERIO);
+        livro.setTitulo("A VERDADE");
         livro.setDataPublicacao(LocalDate.of(1999, 1, 21));
         livro.setAutor(autor);
 
         Livro livro2 = new Livro();
-        livro2.setIsbn("321221-890123");
-        livro2.setPreco(60.0);
+        livro2.setIsbn("353535-8787888");
+        livro2.setPreco(75.0);
         livro2.setGenero(GeneroLivro.FICCAO);
-        livro2.setTitulo("MATRIX 2");
+        livro2.setTitulo("O ESCOLHIDO");
         livro2.setDataPublicacao(LocalDate.of(2000, 1, 21));
         livro2.setAutor(autor);
 

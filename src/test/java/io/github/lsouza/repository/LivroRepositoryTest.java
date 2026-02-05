@@ -106,4 +106,20 @@ class LivroRepositoryTest {
         List<Livro> livrosByAutor = livroRepository.findByAutor(autor);
         livrosByAutor.forEach(System.out::println);
     }
+
+    @Test
+    void listarLivrosComQueryJPQL() {
+        List<Livro> livros = livroRepository.listarTodosOrdenadoPorTituloAndPreco();
+        livros.forEach(System.out::println);
+    }
+
+    @Test
+    void deletarPorGenero() {
+        livroRepository.deleteByGenero(GeneroLivro.CIENCIA);
+    }
+
+    @Test
+    void atualizarDataPublicacao() {
+        livroRepository.updateDataPublicacao(LocalDate.of(2000, 1, 1));
+    }
 }
