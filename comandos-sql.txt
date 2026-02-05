@@ -21,3 +21,7 @@ create table livros(
 select * from autor
 
 select * from livros
+
+begin -> abrir transações
+commit -> ok
+rollback -> voltar oque fez dentro da transação
