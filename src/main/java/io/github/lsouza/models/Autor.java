@@ -26,6 +26,12 @@ public class Autor implements Serializable {
     @Column(name = "data_nascimento", nullable = false)
     private LocalDate dataNascimento;
 
+    private LocalDate dataCadastro;
+
+    private LocalDate dataUltimaAtualizacao;
+
+    private String usuarioUltimaAtualizacao;
+
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
