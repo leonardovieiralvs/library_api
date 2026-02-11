@@ -12,12 +12,4 @@ public record AutorDTO(UUID id,
                        @NotNull LocalDate dataNascimento,
                        @NotBlank String nacionalidade) {
 
-    public Autor mapperToDTO() {
-        Autor autor = new Autor();
-        autor.setNome(this.nome);
-        autor.setDataNascimento(this.dataNascimento);
-        autor.setNacionalidade(this.nacionalidade);
-        return autor;
-    }
-
 }

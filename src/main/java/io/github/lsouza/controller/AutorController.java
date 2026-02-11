@@ -30,47 +30,28 @@ public class AutorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AutorDTO> findById(@PathVariable UUID id) {
-
-        Optional<Autor> autorOptional = autorService.findById(id);
-        if (autorOptional.isPresent()) {
-            Autor autor = autorOptional.get();
-            AutorDTO dto = new AutorDTO(
-                    autor.getId(),
-                    autor.getNome(),
-                    autor.getDataNascimento(),
-                    autor.getNacionalidade()
-            );
-            return ResponseEntity.ok(dto);
-        }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(autorService.findById(id));
     }
+
 
     @GetMapping
     public ResponseEntity<List<AutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome,
-                                                    @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
+                                                      @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
 
-        List<Autor> result = autorService.search(nome, nacionalidade);
-        List<AutorDTO> lista = result
-                .stream()
-                .map(autor -> new AutorDTO(
-                        autor.getId(),
-                        autor.getNome(),
-                        autor.getDataNascimento(),
-                        autor.getNacionalidade())).toList();
-        return ResponseEntity.ok(lista);
+        List<AutorDTO> result = autorService.search(nome, nacionalidade);
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@Valid @RequestBody AutorDTO autorDTO) {
-        Autor autorEntity = autorDTO.mapperToDTO();
-        autorService.autorSave(autorEntity);
+    public ResponseEntity<AutorDTO> save(@Valid @RequestBody AutorDTO autorDTO) {
+        AutorDTO autorCreated = autorService.autorSave(autorDTO);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
-                .buildAndExpand(autorEntity.getId())
+                .buildAndExpand(autorCreated.id())
                 .toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(autorCreated);
     }
 
     @PutMapping("/{id}")
@@ -83,11 +64,7 @@ public class AutorController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {
 
-        Optional<Autor> autorOptional = autorService.findById(id);
-        if (autorOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        autorService.deleteById(autorOptional.get());
+        autorService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }
