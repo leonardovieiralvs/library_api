@@ -19,4 +19,5 @@ public record AutorDTO(UUID id,
         autor.setNacionalidade(this.nacionalidade);
         return autor;
     }
+
 }

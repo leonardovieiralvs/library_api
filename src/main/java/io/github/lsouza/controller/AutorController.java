@@ -1,10 +1,10 @@
 package io.github.lsouza.controller;
 
 import io.github.lsouza.controller.dto.AutorDTO;
+import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.service.AutorService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +21,11 @@ public class AutorController {
 
 
     private final AutorService autorService;
+    private final AutorMapper autorMapper;
 
-    public AutorController(AutorService autorService) {
+    public AutorController(AutorService autorService, AutorMapper autorMapper) {
         this.autorService = autorService;
+        this.autorMapper = autorMapper;
     }
 
     @GetMapping("/{id}")
@@ -70,6 +72,13 @@ public class AutorController {
                 .toUri();
         return ResponseEntity.created(location).build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AutorDTO> autorSave(@PathVariable UUID id, @RequestBody AutorDTO autor) {
+        AutorDTO update = autorService.update(id, autor);
+        return ResponseEntity.status(HttpStatus.OK).body(update);
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable UUID id) {

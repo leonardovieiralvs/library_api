@@ -1,9 +1,12 @@
 package io.github.lsouza.service;
 
 
+import io.github.lsouza.controller.dto.AutorDTO;
+import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.repository.AutorRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +16,11 @@ import java.util.UUID;
 public class AutorService {
 
     private final AutorRepository autorRepository;
+    private final AutorMapper autorMapper;
 
-    public AutorService(AutorRepository autorRepository) {
+    public AutorService(AutorRepository autorRepository, AutorMapper autorMapper) {
         this.autorRepository = autorRepository;
+        this.autorMapper = autorMapper;
     }
 
     public Autor autorSave(Autor autor) {
@@ -49,4 +54,13 @@ public class AutorService {
 
     }
 
+    @Transactional
+    public AutorDTO update(UUID id, AutorDTO autorAtualizado) {
+        Autor autor = autorRepository.findById(id).orElseThrow(() -> new RuntimeException("Autor não encontrado para atualização!"));
+        autor.setId(autor.getId());
+        autor.setNome(autorAtualizado.nome());
+        autor.setDataNascimento(autorAtualizado.dataNascimento());
+        autor.setNacionalidade(autorAtualizado.nacionalidade());
+        return autorMapper.toDto(autor);
+    }
 }
