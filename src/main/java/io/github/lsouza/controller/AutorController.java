@@ -38,8 +38,8 @@ public class AutorController {
     public ResponseEntity<List<AutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome,
                                                       @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
 
-        List<AutorDTO> result = autorService.search(nome, nacionalidade);
-        return ResponseEntity.ok(result);
+        List<AutorDTO> result = autorService.pesquisaByExample(nome, nacionalidade);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PostMapping

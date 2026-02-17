@@ -10,6 +10,8 @@ import io.github.lsouza.models.Autor;
 import io.github.lsouza.repository.AutorRepository;
 import io.github.lsouza.repository.LivroRepository;
 import io.github.lsouza.validator.AutorValidator;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,22 +66,34 @@ public class AutorService {
 
     public List<AutorDTO> search(String nome, String nacionalidade) {
 
+        List<Autor> autores;
+
         if (nome != null && nacionalidade != null) {
-            List<Autor> byNomeAndNacionalidade = autorRepository.findByNomeAndNacionalidade(nome, nacionalidade);
-            return autorMapper.toListDto(byNomeAndNacionalidade);
+            autores = autorRepository.findByNomeAndNacionalidade(nome, nacionalidade);
+        } else if (nome != null) {
+            autores = autorRepository.findByNome(nome);
+        } else if (nacionalidade != null) {
+            autores = autorRepository.findByNacionalidade(nacionalidade);
+        } else {
+            autores = autorRepository.findAll();
         }
+        return autorMapper.toListDto(autores);
+    }
 
-        if (nome != null) {
-            List<Autor> byNome = autorRepository.findByNome(nome);
-            return autorMapper.toListDto(byNome);
-        }
+    public List<AutorDTO> pesquisaByExample(String nome, String nacionalidade) {
+        Autor autor = new Autor();
+        autor.setNome(nome);
+        autor.setNome(nacionalidade);
 
-        if (nacionalidade != null) {
-            List<Autor> byNacionalidade = autorRepository.findByNacionalidade(nacionalidade);
-            return autorMapper.toListDto(byNacionalidade);
-        }
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
 
-        List<Autor> all = autorRepository.findAll();
+        Example<Autor> autorExample = Example.of(autor, matcher);
+
+        List<Autor> all = autorRepository.findAll(autorExample);
         return autorMapper.toListDto(all);
 
     }
