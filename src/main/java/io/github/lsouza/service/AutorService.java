@@ -2,16 +2,18 @@ package io.github.lsouza.service;
 
 
 import io.github.lsouza.controller.dto.AutorDTO;
+import io.github.lsouza.exception.OperationNotAllowedException;
 import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.repository.AutorRepository;
+import io.github.lsouza.repository.LivroRepository;
+import io.github.lsouza.validator.AutorValidator;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,14 +22,19 @@ public class AutorService {
 
     private final AutorRepository autorRepository;
     private final AutorMapper autorMapper;
+    private final AutorValidator autorValidator;
+    private final LivroRepository livroRepository;
 
-    public AutorService(AutorRepository autorRepository, AutorMapper autorMapper) {
+    public AutorService(AutorRepository autorRepository, AutorMapper autorMapper, AutorValidator autorValidator, LivroRepository livroRepository) {
         this.autorRepository = autorRepository;
         this.autorMapper = autorMapper;
+        this.autorValidator = autorValidator;
+        this.livroRepository = livroRepository;
     }
 
     public AutorDTO autorSave(AutorDTO autorDTO) {
         Autor autor = autorMapper.toEntity(autorDTO);
+        autorValidator.validar(autor);
         Autor autorSave = autorRepository.save(autor);
         return autorMapper.toDto(autorSave);
     }
@@ -41,6 +48,9 @@ public class AutorService {
     public void deleteById(UUID id) {
         Autor autor = autorRepository
                 .findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Autor não encontrado!"));
+        if (possuiLivro(autor)) {
+            throw new OperationNotAllowedException("Não é possivel excluir um Autor que possui livros cadastrados");
+        }
 
         autorRepository.delete(autor);
     }
@@ -74,5 +84,10 @@ public class AutorService {
         autor.setDataNascimento(autorAtualizado.dataNascimento());
         autor.setNacionalidade(autorAtualizado.nacionalidade());
         return autorMapper.toDto(autor);
+    }
+
+    public boolean possuiLivro(Autor autor) {
+
+        return livroRepository.existsByAutor(autor);
     }
 }

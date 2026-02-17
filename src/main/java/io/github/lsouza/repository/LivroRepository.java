@@ -15,6 +15,7 @@ import java.util.UUID;
 public interface LivroRepository extends JpaRepository<Livro, UUID> {
 
     List<Livro> findByAutor(Autor autor);
+    boolean existsByAutor(Autor autor);
 
     // JPQL -> referência as entidade e as prioridades(atributos);
     @Query("select l from Livro as l order by l.preco")

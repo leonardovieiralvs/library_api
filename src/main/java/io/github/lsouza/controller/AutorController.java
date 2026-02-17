@@ -1,10 +1,13 @@
 package io.github.lsouza.controller;
 
 import io.github.lsouza.controller.dto.AutorDTO;
+import io.github.lsouza.controller.dto.ErrorResponse;
+import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.service.AutorService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,22 +46,33 @@ public class AutorController {
     }
 
     @PostMapping
-    public ResponseEntity<AutorDTO> save(@Valid @RequestBody AutorDTO autorDTO) {
-        AutorDTO autorCreated = autorService.autorSave(autorDTO);
+    public ResponseEntity<Object> save(@Valid @RequestBody AutorDTO autorDTO) {
+        try {
+            AutorDTO autorCreated = autorService.autorSave(autorDTO);
 
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(autorCreated.id())
-                .toUri();
-        return ResponseEntity.created(location).body(autorCreated);
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    .path("/{id}")
+                    .buildAndExpand(autorCreated.id())
+                    .toUri();
+            return ResponseEntity.created(location).body(autorCreated);
+        } catch (ConflictException e) {
+            var erroDto = ErrorResponse.conflito(e.getMessage());
+        return ResponseEntity.status(erroDto.status()).body(erroDto);
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AutorDTO> autorSave(@PathVariable UUID id, @RequestBody AutorDTO autor) {
-        AutorDTO update = autorService.update(id, autor);
-        return ResponseEntity.status(HttpStatus.OK).body(update);
+    public ResponseEntity<Object> autorSave(@PathVariable UUID id, @RequestBody AutorDTO autor) {
+        try {
+            AutorDTO update = autorService.update(id, autor);
+            return ResponseEntity.status(HttpStatus.OK).body(update);
+        } catch (ConflictException e) {
+            var erroDto = ErrorResponse.conflito(e.getMessage());
+            return ResponseEntity.status(erroDto.status()).body(erroDto);
+        }
     }
+
 
 
     @DeleteMapping("/{id}")
