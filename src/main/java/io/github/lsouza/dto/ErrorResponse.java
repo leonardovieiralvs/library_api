@@ -1,4 +1,4 @@
-package io.github.lsouza.controller.dto;
+package io.github.lsouza.dto;
 
 import lombok.Builder;
 import org.springframework.http.HttpStatus;
@@ -10,15 +10,12 @@ import java.util.List;
 public record ErrorResponse(LocalDateTime timestamp,
                             int status,
                             String mensagem,
+                            String path,
                             List<ErroCampo> erros) {
 
 
 
-    public static ErrorResponse respostaPadrao(String message) {
-        return new ErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message, List.of());
-    }
-
     public static ErrorResponse conflito(String message) {
-        return new ErrorResponse(LocalDateTime.now(), HttpStatus.CONFLICT.value(), message, List.of());
+        return new ErrorResponse(LocalDateTime.now(), HttpStatus.CONFLICT.value(), message, builder().path, List.of());
     }
 }

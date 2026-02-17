@@ -1,4 +1,4 @@
-package io.github.lsouza.controller.dto;
+package io.github.lsouza.dto;
 
 public record ErroCampo(String campo, String error) {
 

@@ -1,8 +1,10 @@
 package io.github.lsouza.service;
 
 
-import io.github.lsouza.controller.dto.AutorDTO;
+import io.github.lsouza.dto.AutorDTO;
+import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.exception.OperationNotAllowedException;
+import io.github.lsouza.exception.handler.GlobalExceptionHandler;
 import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.repository.AutorRepository;
@@ -33,9 +35,14 @@ public class AutorService {
     }
 
     public AutorDTO autorSave(AutorDTO autorDTO) {
+
+        if (autorRepository.existsByNome(autorDTO.nome())) {
+            throw new ConflictException("Autor já cadastrado");
+        }
+
         Autor autor = autorMapper.toEntity(autorDTO);
-        autorValidator.validar(autor);
         Autor autorSave = autorRepository.save(autor);
+
         return autorMapper.toDto(autorSave);
     }
 

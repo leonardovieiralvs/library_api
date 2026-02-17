@@ -18,5 +18,7 @@ public interface AutorRepository extends JpaRepository<Autor, UUID> {
                                                                 LocalDate dataNascimento,
                                                                 String nacionalidade);
 
+    boolean existsByNome(String nome);
+
 
 }
