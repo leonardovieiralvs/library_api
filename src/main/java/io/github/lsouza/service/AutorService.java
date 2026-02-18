@@ -1,10 +1,9 @@
 package io.github.lsouza.service;
 
 
-import io.github.lsouza.dto.AutorDTO;
+import io.github.lsouza.dto.AutorDto;
 import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.exception.OperationNotAllowedException;
-import io.github.lsouza.exception.handler.GlobalExceptionHandler;
 import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.repository.AutorRepository;
@@ -36,7 +35,7 @@ public class AutorService {
         this.livroRepository = livroRepository;
     }
 
-    public AutorDTO autorSave(AutorDTO autorDTO) {
+    public AutorDto autorSave(AutorDto autorDTO) {
 
         if (autorRepository.existsByNome(autorDTO.nome())) {
             throw new ConflictException("Autor já cadastrado");
@@ -48,7 +47,7 @@ public class AutorService {
         return autorMapper.toDto(autorSave);
     }
 
-    public AutorDTO findById(UUID id) {
+    public AutorDto findById(UUID id) {
         Autor autor = autorRepository
                 .findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Autor não encontrado!"));
         return autorMapper.toDto(autor);
@@ -64,7 +63,7 @@ public class AutorService {
         autorRepository.delete(autor);
     }
 
-    public List<AutorDTO> search(String nome, String nacionalidade) {
+    public List<AutorDto> search(String nome, String nacionalidade) {
 
         List<Autor> autores;
 
@@ -80,7 +79,7 @@ public class AutorService {
         return autorMapper.toListDto(autores);
     }
 
-    public List<AutorDTO> pesquisaByExample(String nome, String nacionalidade) {
+    public List<AutorDto> pesquisaByExample(String nome, String nacionalidade) {
         Autor autor = new Autor();
         autor.setNome(nome);
         autor.setNome(nacionalidade);
@@ -98,7 +97,7 @@ public class AutorService {
 
     }
 
-    public AutorDTO update(UUID id, AutorDTO autorAtualizado) {
+    public AutorDto update(UUID id, AutorDto autorAtualizado) {
         Autor autor = autorRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Autor não encontrado!"));
         autor.setId(autor.getId());
         autor.setNome(autorAtualizado.nome());

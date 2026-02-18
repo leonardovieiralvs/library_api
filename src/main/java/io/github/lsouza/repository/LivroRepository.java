@@ -1,5 +1,6 @@
 package io.github.lsouza.repository;
 
+import io.github.lsouza.dto.LivroRequestDto;
 import io.github.lsouza.enumeracao.GeneroLivro;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.models.Livro;
@@ -30,5 +31,7 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @Transactional
     @Query("update Livro set dataPublicacao = ?1")
     void updateDataPublicacao(LocalDate localDate);
+
+    boolean existsByIsbn(String isbn);
 
 }

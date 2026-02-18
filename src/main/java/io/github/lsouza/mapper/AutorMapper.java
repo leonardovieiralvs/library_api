@@ -1,6 +1,6 @@
 package io.github.lsouza.mapper;
 
-import io.github.lsouza.dto.AutorDTO;
+import io.github.lsouza.dto.AutorDto;
 import io.github.lsouza.models.Autor;
 import org.mapstruct.Mapper;
 
@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface AutorMapper {
 
-    AutorDTO toDto(Autor autor);
+    AutorDto toDto(Autor autor);
 
-    Autor toEntity(AutorDTO autorDTO);
+    Autor toEntity(AutorDto autorDTO);
 
-    List<AutorDTO> toListDto(List<Autor> autor);
+    List<AutorDto> toListDto(List<Autor> autor);
 }

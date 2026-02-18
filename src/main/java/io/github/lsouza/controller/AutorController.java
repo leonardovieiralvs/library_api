@@ -1,6 +1,6 @@
 package io.github.lsouza.controller;
 
-import io.github.lsouza.dto.AutorDTO;
+import io.github.lsouza.dto.AutorDto;
 import io.github.lsouza.dto.ErrorResponse;
 import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.mapper.AutorMapper;
@@ -29,23 +29,23 @@ public class AutorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AutorDTO> findById(@PathVariable UUID id) {
+    public ResponseEntity<AutorDto> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(autorService.findById(id));
     }
 
 
     @GetMapping
-    public ResponseEntity<List<AutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome,
-                                                      @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
+    public ResponseEntity<List<AutorDto>> pesquisar(@RequestParam(value = "nome", required = false) String nome,
+                                                    @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
 
-        List<AutorDTO> result = autorService.pesquisaByExample(nome, nacionalidade);
+        List<AutorDto> result = autorService.pesquisaByExample(nome, nacionalidade);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PostMapping
-    public ResponseEntity<AutorDTO> save(@Valid @RequestBody AutorDTO autorDTO) {
+    public ResponseEntity<AutorDto> save(@Valid @RequestBody AutorDto autorDTO) {
 
-            AutorDTO autorCreated = autorService.autorSave(autorDTO);
+            AutorDto autorCreated = autorService.autorSave(autorDTO);
 
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
@@ -57,9 +57,9 @@ public class AutorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> autorSave(@PathVariable UUID id, @RequestBody AutorDTO autor) {
+    public ResponseEntity<Object> autorSave(@PathVariable UUID id, @RequestBody AutorDto autor) {
         try {
-            AutorDTO update = autorService.update(id, autor);
+            AutorDto update = autorService.update(id, autor);
             return ResponseEntity.status(HttpStatus.OK).body(update);
         } catch (ConflictException e) {
             var erroDto = ErrorResponse.conflito(e.getMessage());
