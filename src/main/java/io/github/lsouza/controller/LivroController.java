@@ -4,6 +4,7 @@ import io.github.lsouza.dto.LivroRequisicaoDto;
 import io.github.lsouza.dto.LivroRespostaDto;
 import io.github.lsouza.service.LivroService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -22,13 +23,13 @@ public class LivroController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LivroRespostaDto> findById(@PathVariable UUID id) {
+    public ResponseEntity<LivroRespostaDto> procurarLivroPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(livroService.listarPorId(id));
     }
 
 
     @PostMapping
-    public ResponseEntity<LivroRespostaDto> livroRequestDtoResponseEntity(@Valid @RequestBody LivroRequisicaoDto livroRequisicao) {
+    public ResponseEntity<LivroRespostaDto> salvarLivro(@Valid @RequestBody LivroRequisicaoDto livroRequisicao) {
 
         LivroRespostaDto livroRespostaDto = livroService.salvarLivro(livroRequisicao);
 
@@ -39,6 +40,12 @@ public class LivroController {
                 .toUri();
 
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<LivroRespostaDto> atualizarLivro(@PathVariable UUID id, @RequestBody LivroRequisicaoDto livroRequisicaoDto) {
+        livroService.atualizarLivro(id, livroRequisicaoDto);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}")
