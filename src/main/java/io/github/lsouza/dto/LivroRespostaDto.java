@@ -6,11 +6,11 @@ import io.github.lsouza.models.Autor;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record LivroResponseDto(UUID id,
+public record LivroRespostaDto(UUID id,
                                String isbn,
                                String titulo,
                                LocalDate dataPublicacao,
-                               GeneroLivro generoLivro,
+                               GeneroLivro genero,
                                Double preco,
-                               Autor autor) {
+                               AutorRespostaDto autorRespostaDto) {
 }

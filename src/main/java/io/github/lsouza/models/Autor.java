@@ -1,5 +1,6 @@
 package io.github.lsouza.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -49,4 +50,6 @@ public class Autor implements Serializable {
 
     @Column(name = "id_usuario")
     private UUID idUsuario;
+
+
 }

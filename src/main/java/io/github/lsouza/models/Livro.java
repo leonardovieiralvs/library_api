@@ -2,6 +2,7 @@ package io.github.lsouza.models;
 
 import io.github.lsouza.enumeracao.GeneroLivro;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
@@ -39,4 +40,5 @@ public class Livro implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_autor")
     private Autor autor;
+
 }

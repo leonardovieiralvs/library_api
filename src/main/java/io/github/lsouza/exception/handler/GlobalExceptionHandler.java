@@ -1,7 +1,7 @@
 package io.github.lsouza.exception.handler;
 
-import io.github.lsouza.dto.ErroCampo;
-import io.github.lsouza.dto.ErrorResponse;
+import io.github.lsouza.dto.ErroCampoDto;
+import io.github.lsouza.dto.ErrorRespostaDto;
 import io.github.lsouza.exception.ConflictException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -19,11 +19,11 @@ public class GlobalExceptionHandler {
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e,
-                                                                               HttpServletRequest request) {
+    public ResponseEntity<ErrorRespostaDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e,
+                                                                                  HttpServletRequest request) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        List<ErroCampo> list = fieldErrors.stream().map(fe -> new ErroCampo(fe.getField(), fe.getDefaultMessage())).toList();
-        ErrorResponse erroDeValidacao = ErrorResponse.builder()
+        List<ErroCampoDto> list = fieldErrors.stream().map(fe -> new ErroCampoDto(fe.getField(), fe.getDefaultMessage())).toList();
+        ErrorRespostaDto erroDeValidacao = ErrorRespostaDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
                 .mensagem("Erro de validação")
@@ -34,9 +34,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ErrorResponse> conflictHandlerException(ConflictException conflict,
-                                                                  HttpServletRequest request) {
-        ErrorResponse autorCadastrado = ErrorResponse.builder()
+    public ResponseEntity<ErrorRespostaDto> conflictHandlerException(ConflictException conflict,
+                                                                     HttpServletRequest request) {
+        ErrorRespostaDto autorCadastrado = ErrorRespostaDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.CONFLICT.value())
                 .mensagem(conflict.getMessage())

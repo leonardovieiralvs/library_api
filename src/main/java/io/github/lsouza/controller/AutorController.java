@@ -1,7 +1,7 @@
 package io.github.lsouza.controller;
 
 import io.github.lsouza.dto.AutorDto;
-import io.github.lsouza.dto.ErrorResponse;
+import io.github.lsouza.dto.ErrorRespostaDto;
 import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.service.AutorService;
@@ -62,7 +62,7 @@ public class AutorController {
             AutorDto update = autorService.update(id, autor);
             return ResponseEntity.status(HttpStatus.OK).body(update);
         } catch (ConflictException e) {
-            var erroDto = ErrorResponse.conflito(e.getMessage());
+            var erroDto = ErrorRespostaDto.conflito(e.getMessage());
             return ResponseEntity.status(erroDto.status()).body(erroDto);
         }
     }

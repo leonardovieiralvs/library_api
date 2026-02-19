@@ -1,6 +1,5 @@
 package io.github.lsouza.repository;
 
-import io.github.lsouza.dto.LivroRequestDto;
 import io.github.lsouza.enumeracao.GeneroLivro;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.models.Livro;
