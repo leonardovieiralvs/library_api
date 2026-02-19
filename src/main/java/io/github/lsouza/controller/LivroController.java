@@ -41,5 +41,11 @@ public class LivroController {
         return ResponseEntity.created(location).build();
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarLivro(@PathVariable UUID id) {
+        livroService.deletarLivro(id);
+        return ResponseEntity.ok().build();
+    }
+
 
 }
