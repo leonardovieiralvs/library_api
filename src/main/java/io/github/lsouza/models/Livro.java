@@ -38,7 +38,7 @@ public class Livro implements Serializable {
     private Double preco;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_autor")
+    @JoinColumn(name = "idAutor")
     private Autor autor;
 
 }

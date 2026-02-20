@@ -13,8 +13,10 @@ public record LivroRequisicaoDto(@NotBlank(message = "Campo obrigatório.")
                                  String titulo,
                                  @NotNull(message = "Campo obrigatório.")
                                  LocalDate dataPublicacao,
+                                 @NotNull(message = "Campo obrigatório.")
                                  GeneroLivro genero,
+                                 @NotNull(message = "Campo obrigatório.")
                                  Double preco,
                                  @NotNull(message = "O livro deve conter o ID de um autor.")
-                                 UUID id_autor) {
+                                 UUID idAutor) {
 }

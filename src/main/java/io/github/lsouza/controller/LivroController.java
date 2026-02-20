@@ -43,7 +43,7 @@ public class LivroController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LivroRespostaDto> atualizarLivro(@PathVariable UUID id, @RequestBody LivroRequisicaoDto livroRequisicaoDto) {
+    public ResponseEntity<Void> atualizarLivro(@PathVariable UUID id, @Valid @RequestBody LivroRequisicaoDto livroRequisicaoDto) {
         livroService.atualizarLivro(id, livroRequisicaoDto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

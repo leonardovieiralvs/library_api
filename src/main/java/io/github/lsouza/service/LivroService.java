@@ -44,7 +44,7 @@ public class LivroService {
 
         Livro livro = livroMapper.livroToEntity(livroRequisicaoDto);
 
-        Autor autor = autorRepository.findById(livroRequisicaoDto.id_autor()).orElseThrow(() -> new RuntimeException("Autor não encontrado"));
+        Autor autor = autorRepository.findById(livroRequisicaoDto.idAutor()).orElseThrow(() -> new RuntimeException("Autor não encontrado"));
         livro.setAutor(autor);
 
         Livro save = livroRepository.save(livro);
@@ -60,7 +60,6 @@ public class LivroService {
         livro.setDataPublicacao(livroRequisicaoDto.dataPublicacao());
         livro.setGenero(livroRequisicaoDto.genero());
         livro.setPreco(livroRequisicaoDto.preco());
-        livro.setId(livroRequisicaoDto.id_autor());
 
         return livroMapper.livroRespostaDto(livro);
     }

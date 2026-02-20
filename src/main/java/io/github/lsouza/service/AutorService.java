@@ -99,7 +99,7 @@ public class AutorService {
 
     public AutorDto update(UUID id, AutorDto autorAtualizado) {
         Autor autor = autorRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Autor não encontrado!"));
-        autor.setId(autor.getId());
+//        autor.setId(autor.getId());
         autor.setNome(autorAtualizado.nome());
         autor.setDataNascimento(autorAtualizado.dataNascimento());
         autor.setNacionalidade(autorAtualizado.nacionalidade());
