@@ -76,7 +76,7 @@ public class AutorService {
         } else {
             autores = autorRepository.findAll();
         }
-        return autorMapper.toListDto(autores);
+        return autores.stream().map(autorMapper::toDto).toList();
     }
 
     public List<AutorDto> pesquisaByExample(String nome, String nacionalidade) {
@@ -93,7 +93,7 @@ public class AutorService {
         Example<Autor> autorExample = Example.of(autor, matcher);
 
         List<Autor> all = autorRepository.findAll(autorExample);
-        return autorMapper.toListDto(all);
+        return all.stream().map(autorMapper::toDto).toList();
 
     }
 

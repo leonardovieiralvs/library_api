@@ -7,7 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record LivroRequisicaoDto(@NotBlank(message = "Campo obrigatório.")
+public record LivroRequisicaoDto(
+                                 @NotBlank(message = "Campo obrigatório.")
                                  String isbn,
                                  @NotBlank(message = "Campo obrigatório.")
                                  String titulo,

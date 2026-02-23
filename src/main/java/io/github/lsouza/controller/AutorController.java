@@ -4,6 +4,7 @@ import io.github.lsouza.dto.AutorDto;
 import io.github.lsouza.dto.ErrorRespostaDto;
 import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.mapper.AutorMapper;
+import io.github.lsouza.mapper.GenericController;
 import io.github.lsouza.service.AutorService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/autores")
-public class AutorController {
+public class AutorController implements GenericController {
 
 
     private final AutorService autorService;
@@ -47,11 +48,7 @@ public class AutorController {
 
             AutorDto autorCreated = autorService.autorSave(autorDTO);
 
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    .path("/{id}")
-                    .buildAndExpand(autorCreated.id())
-                    .toUri();
+            URI location = gerarHeaderLocation(autorCreated.id());
             return ResponseEntity.created(location).body(autorCreated);
 
     }

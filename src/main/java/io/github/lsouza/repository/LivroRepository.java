@@ -32,5 +32,7 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     void updateDataPublicacao(LocalDate localDate);
 
     boolean existsByIsbn(String isbn);
+    boolean existsByIsbnOrTitulo(String isbn, String titulo);
+
 
 }
