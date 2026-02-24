@@ -1,7 +1,9 @@
 package io.github.lsouza.service;
 
+import io.github.lsouza.dto.AutorDto;
 import io.github.lsouza.dto.LivroRequisicaoDto;
 import io.github.lsouza.dto.LivroRespostaDto;
+import io.github.lsouza.enumeracao.GeneroLivro;
 import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.exception.LivroNotFoundException;
 import io.github.lsouza.mapper.LivroMapper;
@@ -9,9 +11,13 @@ import io.github.lsouza.models.Autor;
 import io.github.lsouza.models.Livro;
 import io.github.lsouza.repository.AutorRepository;
 import io.github.lsouza.repository.LivroRepository;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -71,4 +77,24 @@ public class LivroService {
         Livro livro = livroRepository.findById(id).orElseThrow(() -> new LivroNotFoundException("Livro inexistente"));
         livroRepository.delete(livro);
     }
+
+//    public List<LivroRespostaDto> pesquisaByExample(UUID id, String isbn, String titulo, String nome, GeneroLivro genero, LocalDate dataPublicacao) {
+//        Livro livro = new Livro();
+//        livro.setIsbn(isbn);
+//        livro.setTitulo(titulo);
+//        livro.getAutor().setNome(nome);
+//        livro.setGenero(genero);
+//        livro.setDataPublicacao(dataPublicacao);
+//
+//        ExampleMatcher matcher = ExampleMatcher
+//                .matching()
+//                .withIgnoreNullValues()
+//                .withIgnoreCase()
+//                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+//        Example<Livro> livroExample = Example.of(livro, matcher);
+//
+//        List<Livro> all = livroRepository.findAll(livroExample);
+//
+//        return all.stream().map(livroMapper::livroRespostaDto).toList();
+//    }
 }
