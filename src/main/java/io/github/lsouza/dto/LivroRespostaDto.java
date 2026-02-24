@@ -11,5 +11,5 @@ public record LivroRespostaDto(UUID id,
                                LocalDate dataPublicacao,
                                GeneroLivro genero,
                                Double preco,
-                               AutorRespostaDto autorDto) {
+                               AutorDto autor) {
 }

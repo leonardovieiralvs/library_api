@@ -3,23 +3,21 @@ package io.github.lsouza.exception.handler;
 import io.github.lsouza.dto.ErroCampoDto;
 import io.github.lsouza.dto.ErrorRespostaDto;
 import io.github.lsouza.exception.ConflictException;
+import io.github.lsouza.exception.OperationNotAllowedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorRespostaDto> handleMethodArgumentNotValidException(MethodArgumentNotValidException e,
@@ -59,5 +57,19 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(OperationNotAllowedException.class)
+    public ResponseEntity<ErrorRespostaDto> handleOperationNotAllowedException(OperationNotAllowedException ex,
+                                                                               HttpServletRequest request) {
+
+        ErrorRespostaDto build = ErrorRespostaDto.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.FORBIDDEN.value())
+                .mensagem(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(build);
     }
 }

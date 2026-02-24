@@ -1,8 +1,6 @@
 package io.github.lsouza.controller;
 
 import io.github.lsouza.dto.AutorDto;
-import io.github.lsouza.dto.ErrorRespostaDto;
-import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.mapper.GenericController;
 import io.github.lsouza.service.AutorService;
@@ -10,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -46,24 +43,20 @@ public class AutorController implements GenericController {
     @PostMapping
     public ResponseEntity<AutorDto> save(@Valid @RequestBody AutorDto autorDTO) {
 
-            AutorDto autorCreated = autorService.autorSave(autorDTO);
+        AutorDto autorCreated = autorService.autorSave(autorDTO);
 
-            URI location = gerarHeaderLocation(autorCreated.id());
-            return ResponseEntity.created(location).body(autorCreated);
+        URI location = gerarHeaderLocation(autorCreated.id());
+        return ResponseEntity.created(location).body(autorCreated);
 
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> autorSave(@PathVariable UUID id, @RequestBody AutorDto autor) {
-        try {
-            AutorDto update = autorService.update(id, autor);
-            return ResponseEntity.status(HttpStatus.OK).body(update);
-        } catch (ConflictException e) {
-            var erroDto = ErrorRespostaDto.conflito(e.getMessage());
-            return ResponseEntity.status(erroDto.status()).body(erroDto);
-        }
-    }
+    public ResponseEntity<AutorDto> autorSave(@PathVariable UUID id, @RequestBody AutorDto autor) {
 
+        AutorDto update = autorService.update(id, autor);
+        return ResponseEntity.status(HttpStatus.OK).body(update);
+
+    }
 
 
     @DeleteMapping("/{id}")

@@ -12,10 +12,4 @@ public record ErrorRespostaDto(LocalDateTime timestamp,
                                String mensagem,
                                String path,
                                List<ErroCampoDto> erros) {
-
-
-
-    public static ErrorRespostaDto conflito(String message) {
-        return new ErrorRespostaDto(LocalDateTime.now(), HttpStatus.CONFLICT.value(), message, builder().path, List.of());
-    }
 }

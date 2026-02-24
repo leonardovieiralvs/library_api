@@ -7,13 +7,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = AutorMapper.class)
 public interface LivroMapper {
 
 
     Livro livroToEntity(LivroRequisicaoDto requisicaoDto);
 
-    @Mapping(source = "autor", target = "autorDto")
+//    @Mapping(source = "autor", target = "autorDto")
     LivroRespostaDto livroRespostaDto(Livro livro);
 
     void updateEntity(@MappingTarget Livro livro, LivroRequisicaoDto dto);
