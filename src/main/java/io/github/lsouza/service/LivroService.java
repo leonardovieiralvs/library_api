@@ -1,6 +1,5 @@
 package io.github.lsouza.service;
 
-import io.github.lsouza.dto.AutorDto;
 import io.github.lsouza.dto.LivroRequisicaoDto;
 import io.github.lsouza.dto.LivroRespostaDto;
 import io.github.lsouza.enumeracao.GeneroLivro;
@@ -13,8 +12,11 @@ import io.github.lsouza.repository.AutorRepository;
 import io.github.lsouza.repository.LivroRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static io.github.lsouza.repository.specs.LivroSpecs.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -78,23 +80,47 @@ public class LivroService {
         livroRepository.delete(livro);
     }
 
-//    public List<LivroRespostaDto> pesquisaByExample(UUID id, String isbn, String titulo, String nome, GeneroLivro genero, LocalDate dataPublicacao) {
-//        Livro livro = new Livro();
-//        livro.setIsbn(isbn);
-//        livro.setTitulo(titulo);
-//        livro.getAutor().setNome(nome);
-//        livro.setGenero(genero);
-//        livro.setDataPublicacao(dataPublicacao);
-//
-//        ExampleMatcher matcher = ExampleMatcher
-//                .matching()
-//                .withIgnoreNullValues()
-//                .withIgnoreCase()
-//                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
-//        Example<Livro> livroExample = Example.of(livro, matcher);
-//
-//        List<Livro> all = livroRepository.findAll(livroExample);
-//
-//        return all.stream().map(livroMapper::livroRespostaDto).toList();
-//    }
+    // PESQUISA BY EXAMPLE
+    public List<LivroRespostaDto> pesquisaByExample(UUID id, String isbn, String titulo, String nome, GeneroLivro genero, LocalDate dataPublicacao) {
+        Livro livro = new Livro();
+        livro.setIsbn(isbn);
+        livro.setTitulo(titulo);
+        livro.getAutor().setNome(nome);
+        livro.setGenero(genero);
+        livro.setDataPublicacao(dataPublicacao);
+
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnoreNullValues()
+                .withIgnoreCase()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Livro> livroExample = Example.of(livro, matcher);
+
+        List<Livro> all = livroRepository.findAll(livroExample);
+
+        return all.stream().map(livroMapper::livroRespostaDto).toList();
+    }
+
+    public List<LivroRespostaDto> pesquisa(String isbn, String nome, GeneroLivro genero, Integer anoPublicacao) {
+
+        Specification<Livro> spec = Specification.allOf();
+        if (isbn != null) {
+            spec = spec.and(isbnEquals(isbn));
+        }
+
+        if(nome != null) {
+            spec = spec.and(nomeAutorLike(nome));
+        }
+
+        if (genero != null) {
+            spec = spec.and(generoEquals(genero));
+        }
+
+        if (anoPublicacao != null) {
+            spec = spec.and(anoPublicacaoEquals(anoPublicacao));
+        }
+
+        List<Livro> livros = livroRepository.findAll(spec);
+        return livros.stream().map(livroMapper::livroRespostaDto).toList();
+    }
 }

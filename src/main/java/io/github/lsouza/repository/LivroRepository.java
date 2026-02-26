@@ -3,7 +3,9 @@ package io.github.lsouza.repository;
 import io.github.lsouza.enumeracao.GeneroLivro;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.models.Livro;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-public interface LivroRepository extends JpaRepository<Livro, UUID> {
+public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecificationExecutor<Livro> {
 
     List<Livro> findByAutor(Autor autor);
     boolean existsByAutor(Autor autor);

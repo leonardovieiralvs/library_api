@@ -82,7 +82,7 @@ public class AutorService {
     public List<AutorDto> pesquisaByExample(String nome, String nacionalidade) {
         Autor autor = new Autor();
         autor.setNome(nome);
-        autor.setNome(nacionalidade);
+        autor.setNacionalidade(nacionalidade);
 
         ExampleMatcher matcher = ExampleMatcher
                 .matching()
