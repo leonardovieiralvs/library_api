@@ -2,6 +2,7 @@ package io.github.lsouza.exception.handler;
 
 import io.github.lsouza.dto.ErroCampoDto;
 import io.github.lsouza.dto.ErrorRespostaDto;
+import io.github.lsouza.exception.CampoInvalidationException;
 import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.exception.OperationNotAllowedException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,7 +53,7 @@ public class GlobalExceptionHandler {
         ErrorRespostaDto error = ErrorRespostaDto.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.BAD_REQUEST.value())
-                .mensagem("JSON inválido ou formato incorreto")
+                .mensagem(ex.getMessage())
                 .path(request.getRequestURI())
                 .build();
 
@@ -71,5 +72,15 @@ public class GlobalExceptionHandler {
                 .build();
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(build);
+    }
+
+    @ExceptionHandler(CampoInvalidationException.class)
+    public ResponseEntity<ErrorRespostaDto> handleDataInvalida(CampoInvalidationException e) {
+        ErrorRespostaDto build = ErrorRespostaDto.builder()
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .mensagem(e.getMessage())
+                .erros(List.of(new ErroCampoDto(e.getCampo(), e.getMessage())))
+                .build();
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(build);
     }
 }

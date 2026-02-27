@@ -8,7 +8,6 @@ import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.repository.AutorRepository;
 import io.github.lsouza.repository.LivroRepository;
-import io.github.lsouza.validator.AutorValidator;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
@@ -25,13 +24,11 @@ public class AutorService {
 
     private final AutorRepository autorRepository;
     private final AutorMapper autorMapper;
-    private final AutorValidator autorValidator;
     private final LivroRepository livroRepository;
 
-    public AutorService(AutorRepository autorRepository, AutorMapper autorMapper, AutorValidator autorValidator, LivroRepository livroRepository) {
+    public AutorService(AutorRepository autorRepository, AutorMapper autorMapper, LivroRepository livroRepository) {
         this.autorRepository = autorRepository;
         this.autorMapper = autorMapper;
-        this.autorValidator = autorValidator;
         this.livroRepository = livroRepository;
     }
 

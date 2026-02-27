@@ -2,7 +2,6 @@ package io.github.lsouza.models;
 
 import io.github.lsouza.enumeracao.GeneroLivro;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;

@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class LivroNotFoundException extends RuntimeException {
 
     public LivroNotFoundException(String message) {
-        super("Livro inexistente");
+        super(message);
     }
-
-//    public LivroNotFound(String message) {
-//        super(message);
-//    }
 }

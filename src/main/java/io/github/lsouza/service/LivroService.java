@@ -1,6 +1,5 @@
 package io.github.lsouza.service;
 
-import io.github.lsouza.dto.LivroRequisicaoDto;
 import io.github.lsouza.dto.LivroRespostaDto;
 import io.github.lsouza.enumeracao.GeneroLivro;
 import io.github.lsouza.exception.ConflictException;
@@ -10,6 +9,7 @@ import io.github.lsouza.models.Autor;
 import io.github.lsouza.models.Livro;
 import io.github.lsouza.repository.AutorRepository;
 import io.github.lsouza.repository.LivroRepository;
+import io.github.lsouza.validator.LivroValidator;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,12 +29,14 @@ public class LivroService {
     private final LivroRepository livroRepository;
     private final AutorRepository autorRepository;
     private final LivroMapper livroMapper;
+    private final LivroValidator livroValidator;
 
 
-    public LivroService(LivroRepository livroRepository, AutorRepository autorRepository, LivroMapper livroMapper) {
+    public LivroService(LivroRepository livroRepository, AutorRepository autorRepository, LivroMapper livroMapper, LivroValidator livroValidator) {
         this.livroRepository = livroRepository;
         this.autorRepository = autorRepository;
         this.livroMapper = livroMapper;
+        this.livroValidator = livroValidator;
     }
 
 
@@ -44,12 +46,18 @@ public class LivroService {
     }
 
 
-    public LivroRespostaDto salvarLivro(LivroRequisicaoDto livroRequisicaoDto) {
+    public LivroRespostaDto salvarLivro(io.github.lsouza.dto.LivroRequisicaoDto livroRequisicaoDto) {
 
         if (livroRepository.existsByIsbn(livroRequisicaoDto.isbn())) {
-            throw new ConflictException("ISBN já cadastrado no banco.");
+            throw new ConflictException("Isbn já existente no banco.");
         }
 
+        if (livroRepository.existsByTitulo(livroRequisicaoDto.titulo())) {
+            throw new ConflictException("Título já existente no banco.");
+        }
+
+
+        livroValidator.validar(livroRequisicaoDto);
         Livro livro = livroMapper.livroToEntity(livroRequisicaoDto);
 
         Autor autor = autorRepository.findById(livroRequisicaoDto.idAutor()).orElseThrow(() -> new RuntimeException("Autor não encontrado"));
@@ -60,17 +68,17 @@ public class LivroService {
         return livroMapper.livroRespostaDto(save);
     }
 
-    public LivroRespostaDto atualizarLivro(UUID id, LivroRequisicaoDto livroRequisicaoDto) {
+    //Existe OUTRO livro com esse título que não seja este aqui?
+    public LivroRespostaDto atualizarLivro(UUID id, io.github.lsouza.dto.LivroRequisicaoDto livroRequisicaoDto) {
         Livro livro = livroRepository.findById(id).orElseThrow(() -> new LivroNotFoundException("Livro inexistente"));
-        if (livroRepository.existsByIsbn(livroRequisicaoDto.isbn())) {
-            throw new ConflictException("Isbn existente no banco.");
+        if (livroRepository.existsByIsbnAndIdNot(livroRequisicaoDto.isbn(), id)) {
+            throw new ConflictException("Isbn já existente no banco.");
         }
-        if (livroRepository.existsByTitulo(livroRequisicaoDto.titulo())) {
-            throw new ConflictException("Titulo ja existente no banco.");
+        if (livroRepository.existsByTituloAndIdNot(livroRequisicaoDto.titulo(), id)) {
+            throw new ConflictException("Título já existente no banco.");
         }
 
         livroMapper.updateEntity(livro, livroRequisicaoDto);
-        livroRepository.save(livro);
 
         return livroMapper.livroRespostaDto(livro);
 
@@ -104,6 +112,7 @@ public class LivroService {
     }
 
     public List<LivroRespostaDto> pesquisa(String isbn, String nome, GeneroLivro genero, Integer anoPublicacao) {
+
 
         Specification<Livro> spec = Specification.allOf();
         if (isbn != null) {

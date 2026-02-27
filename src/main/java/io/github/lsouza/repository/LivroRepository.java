@@ -3,7 +3,6 @@ package io.github.lsouza.repository;
 import io.github.lsouza.enumeracao.GeneroLivro;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.models.Livro;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -33,9 +32,9 @@ public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecific
     @Query("update Livro set dataPublicacao = ?1")
     void updateDataPublicacao(LocalDate localDate);
 
+    boolean existsByIsbnAndIdNot(String isbn, UUID id);
+    boolean existsByTituloAndIdNot(String titulo, UUID id);
     boolean existsByIsbn(String isbn);
     boolean existsByTitulo(String titulo);
-    boolean existsByIsbnOrTitulo(String isbn, String titulo);
-
 
 }

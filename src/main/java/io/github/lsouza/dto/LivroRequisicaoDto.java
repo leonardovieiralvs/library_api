@@ -16,7 +16,6 @@ public record LivroRequisicaoDto(
                                  LocalDate dataPublicacao,
                                  @NotNull(message = "Campo obrigatório.")
                                  GeneroLivro genero,
-                                 @NotNull(message = "Campo obrigatório.")
                                  Double preco,
                                  @NotNull(message = "O livro deve conter o ID de um autor.")
                                  UUID idAutor) {
