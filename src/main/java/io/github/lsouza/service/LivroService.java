@@ -62,9 +62,11 @@ public class LivroService {
 
     public LivroRespostaDto atualizarLivro(UUID id, LivroRequisicaoDto livroRequisicaoDto) {
         Livro livro = livroRepository.findById(id).orElseThrow(() -> new LivroNotFoundException("Livro inexistente"));
-        if (livroRepository
-                .existsByIsbnOrTitulo(livroRequisicaoDto.isbn(), livroRequisicaoDto.titulo())) {
-            throw new ConflictException("Isbn ou Titulo ja existente no banco.");
+        if (livroRepository.existsByIsbn(livroRequisicaoDto.isbn())) {
+            throw new ConflictException("Isbn existente no banco.");
+        }
+        if (livroRepository.existsByTitulo(livroRequisicaoDto.titulo())) {
+            throw new ConflictException("Titulo ja existente no banco.");
         }
 
         livroMapper.updateEntity(livro, livroRequisicaoDto);
