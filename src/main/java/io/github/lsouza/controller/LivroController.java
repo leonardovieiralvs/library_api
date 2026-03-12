@@ -6,10 +6,10 @@ import io.github.lsouza.enumeracao.GeneroLivro;
 import io.github.lsouza.mapper.GenericController;
 import io.github.lsouza.service.LivroService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -31,12 +31,14 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
-    public ResponseEntity<List<LivroRespostaDto>> pesquisa(@RequestParam(value = "isbn", required = false) String isbn,
+    public ResponseEntity<Page<LivroRespostaDto>> pesquisa(@RequestParam(value = "isbn", required = false) String isbn,
                                                            @RequestParam(value = "nome-autor", required = false) String nome,
                                                            @RequestParam(value = "genero", required = false) GeneroLivro genero,
-                                                           @RequestParam(value = "ano-publicacao", required = false) Integer dataPublicacao) {
+                                                           @RequestParam(value = "ano-publicacao", required = false) Integer dataPublicacao,
+                                                           @RequestParam(value = "pagina", defaultValue = "0") Integer pagina,
+                                                           @RequestParam(value = "tamanho-pagina", defaultValue = "10") Integer tamanhoPagina) {
 
-        List<LivroRespostaDto> pesquisa = livroService.pesquisa(isbn, nome, genero, dataPublicacao);
+        Page<LivroRespostaDto> pesquisa = livroService.pesquisa(isbn, nome, genero, dataPublicacao, pagina, tamanhoPagina);
         return ResponseEntity.status(HttpStatus.OK).body(pesquisa);
     }
 

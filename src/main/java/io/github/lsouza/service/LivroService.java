@@ -10,8 +10,7 @@ import io.github.lsouza.models.Livro;
 import io.github.lsouza.repository.AutorRepository;
 import io.github.lsouza.repository.LivroRepository;
 import io.github.lsouza.validator.LivroValidator;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -111,7 +110,7 @@ public class LivroService {
         return all.stream().map(livroMapper::livroRespostaDto).toList();
     }
 
-    public List<LivroRespostaDto> pesquisa(String isbn, String nome, GeneroLivro genero, Integer anoPublicacao) {
+    public Page<LivroRespostaDto> pesquisa(String isbn, String nome, GeneroLivro genero, Integer anoPublicacao, Integer pagina, Integer tamanhoPagina) {
 
 
         Specification<Livro> spec = Specification.allOf();
@@ -131,7 +130,10 @@ public class LivroService {
             spec = spec.and(anoPublicacaoEquals(anoPublicacao));
         }
 
-        List<Livro> livros = livroRepository.findAll(spec);
-        return livros.stream().map(livroMapper::livroRespostaDto).toList();
+        Pageable pageRequest = PageRequest.of(pagina, tamanhoPagina);
+
+        Page<Livro> livros = livroRepository.findAll(spec, pageRequest);
+
+        return livros.map(livroMapper::livroRespostaDto);
     }
 }
