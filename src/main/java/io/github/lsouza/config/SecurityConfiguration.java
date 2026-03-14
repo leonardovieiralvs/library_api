@@ -1,5 +1,7 @@
 package io.github.lsouza.config;
 
+import io.github.lsouza.security.CustomUserDetailsService;
+import io.github.lsouza.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -7,12 +9,9 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -26,11 +25,13 @@ public class SecurityConfiguration {
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(config -> config.loginPage("/login").permitAll())
                 .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers(HttpMethod.GET, "/autores/**").permitAll();
                     authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+
+                    authorize.requestMatchers(HttpMethod.GET, "/livros/**").permitAll();
                     authorize.requestMatchers("/livros/**").hasRole("ADMIN");
-                    authorize.requestMatchers("/usuarios/**").hasRole("ADMIN");
-//                    authorize.requestMatchers("/autores/**").hasAnyRole("ADMIN", "USER");
-//                    authorize.requestMatchers(HttpMethod.DELETE, "/autores/**").hasAuthority("GERENTE");
+
+                    authorize.requestMatchers("/usuarios/**").permitAll();
                     authorize.anyRequest().authenticated();
                 })
                 .build();
@@ -43,9 +44,14 @@ public class SecurityConfiguration {
     }
 
     @Bean
+    public UserDetailsService userDetailsService(UsuarioService usuarioService) {
+        return new CustomUserDetailsService(usuarioService);
+    }
+
+
+/*                                          USERS em memoria
+    @Bean
     public UserDetailsService userDetailsService (PasswordEncoder encoder) {
-
-
         UserDetails user1 = User.builder()
                 .username("lvs")
                 .password(encoder.encode("12345"))
@@ -60,4 +66,5 @@ public class SecurityConfiguration {
 
         return new InMemoryUserDetailsManager(user1, user2);
     }
+ */
 }

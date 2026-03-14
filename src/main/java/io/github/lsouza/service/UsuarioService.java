@@ -22,12 +22,15 @@ public class UsuarioService {
         this.usuarioMapper = usuarioMapper;
     }
 
-    public UsuarioDto salvarUsuario(UsuarioDto usuario) {
-        Usuario user = usuarioMapper.toEntity(usuario);
+    public UsuarioDto salvarUsuario(UsuarioDto usuarioDto) {
+        Usuario usuario = usuarioMapper.toEntity(usuarioDto);
 
-        user.setSenha(passwordEncoder.encode(usuario.senha()));
+        usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
-        return usuarioMapper.toDto(usuarioRepository.save(user));
+        Usuario usuarioSalvo = usuarioRepository.save(usuario);
+
+        return usuarioMapper.toDto(usuarioSalvo);
+
     }
 
     public Usuario obterPorLogin(String login) {

@@ -50,7 +50,7 @@ public class LivroController implements GenericController {
 
         URI location = gerarHeaderLocation(livroRespostaDto.id());
 
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).body(livroRespostaDto);
     }
 
     @PutMapping("/{id}")
