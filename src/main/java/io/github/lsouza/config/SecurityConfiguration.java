@@ -2,6 +2,7 @@ package io.github.lsouza.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,6 +26,9 @@ public class SecurityConfiguration {
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(config -> config.loginPage("/login").permitAll())
                 .authorizeHttpRequests(authorize -> {
+                    authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+//                    authorize.requestMatchers("/autores/**").hasAnyRole("ADMIN", "USER");
+//                    authorize.requestMatchers(HttpMethod.DELETE, "/autores/**").hasAuthority("GERENTE");
                     authorize.anyRequest().authenticated();
                 })
                 .build();
@@ -38,6 +42,7 @@ public class SecurityConfiguration {
 
     @Bean
     public UserDetailsService userDetailsService (PasswordEncoder encoder) {
+
 
         UserDetails user1 = User.builder()
                 .username("lvs")
