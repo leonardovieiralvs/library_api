@@ -1,6 +1,7 @@
 package io.github.lsouza.service;
 
 
+import io.github.lsouza.config.SecurityService;
 import io.github.lsouza.dto.AutorDto;
 import io.github.lsouza.exception.ConflictException;
 import io.github.lsouza.exception.OperationNotAllowedException;
@@ -8,9 +9,11 @@ import io.github.lsouza.mapper.AutorMapper;
 import io.github.lsouza.models.Autor;
 import io.github.lsouza.repository.AutorRepository;
 import io.github.lsouza.repository.LivroRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class AutorService {
@@ -25,12 +29,7 @@ public class AutorService {
     private final AutorRepository autorRepository;
     private final AutorMapper autorMapper;
     private final LivroRepository livroRepository;
-
-    public AutorService(AutorRepository autorRepository, AutorMapper autorMapper, LivroRepository livroRepository) {
-        this.autorRepository = autorRepository;
-        this.autorMapper = autorMapper;
-        this.livroRepository = livroRepository;
-    }
+    private final SecurityService securityService;
 
     public AutorDto autorSave(AutorDto autorDTO) {
 
@@ -39,6 +38,8 @@ public class AutorService {
         }
 
         Autor autor = autorMapper.toEntity(autorDTO);
+        autor.setUsuario(securityService.obterUsuarioLogado());
+
         Autor autorSave = autorRepository.save(autor);
 
         return autorMapper.toDto(autorSave);

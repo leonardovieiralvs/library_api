@@ -30,7 +30,6 @@ public class UsuarioService {
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
 
         return usuarioMapper.toDto(usuarioSalvo);
-
     }
 
     public Usuario obterPorLogin(String login) {

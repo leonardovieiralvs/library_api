@@ -24,8 +24,9 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(config -> config.loginPage("/login").permitAll())
+//                .formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers(HttpMethod.GET, "/autores/**").permitAll();
+                    authorize.requestMatchers(HttpMethod.GET, "/autores/**").hasAnyRole("ADMIN", "USER");
                     authorize.requestMatchers("/autores/**").hasRole("ADMIN");
 
                     authorize.requestMatchers(HttpMethod.GET, "/livros/**").permitAll();
@@ -34,6 +35,7 @@ public class SecurityConfiguration {
                     authorize.requestMatchers("/usuarios/**").permitAll();
                     authorize.anyRequest().authenticated();
                 })
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 

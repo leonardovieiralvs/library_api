@@ -1,5 +1,7 @@
 package io.github.lsouza.service;
 
+import io.github.lsouza.config.SecurityService;
+import io.github.lsouza.dto.LivroRequisicaoDto;
 import io.github.lsouza.dto.LivroRespostaDto;
 import io.github.lsouza.enumeracao.GeneroLivro;
 import io.github.lsouza.exception.ConflictException;
@@ -10,8 +12,10 @@ import io.github.lsouza.models.Livro;
 import io.github.lsouza.repository.AutorRepository;
 import io.github.lsouza.repository.LivroRepository;
 import io.github.lsouza.validator.LivroValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class LivroService {
@@ -29,15 +34,7 @@ public class LivroService {
     private final AutorRepository autorRepository;
     private final LivroMapper livroMapper;
     private final LivroValidator livroValidator;
-
-
-    public LivroService(LivroRepository livroRepository, AutorRepository autorRepository, LivroMapper livroMapper, LivroValidator livroValidator) {
-        this.livroRepository = livroRepository;
-        this.autorRepository = autorRepository;
-        this.livroMapper = livroMapper;
-        this.livroValidator = livroValidator;
-    }
-
+    private final SecurityService securityService;
 
     public LivroRespostaDto listarPorId(UUID id) {
         Livro livro = livroRepository.findById(id).orElseThrow(() -> new LivroNotFoundException("Livro não encontrado"));
@@ -45,7 +42,7 @@ public class LivroService {
     }
 
 
-    public LivroRespostaDto salvarLivro(io.github.lsouza.dto.LivroRequisicaoDto livroRequisicaoDto) {
+    public LivroRespostaDto salvarLivro(LivroRequisicaoDto livroRequisicaoDto) {
 
         if (livroRepository.existsByIsbn(livroRequisicaoDto.isbn())) {
             throw new ConflictException("Isbn já existente no banco.");
@@ -61,6 +58,8 @@ public class LivroService {
 
         Autor autor = autorRepository.findById(livroRequisicaoDto.idAutor()).orElseThrow(() -> new RuntimeException("Autor não encontrado"));
         livro.setAutor(autor);
+
+        livro.setUsuario(securityService.obterUsuarioLogado());
 
         Livro save = livroRepository.save(livro);
 
@@ -118,7 +117,7 @@ public class LivroService {
             spec = spec.and(isbnEquals(isbn));
         }
 
-        if(nome != null) {
+        if (nome != null) {
             spec = spec.and(nomeAutorLike(nome));
         }
 
